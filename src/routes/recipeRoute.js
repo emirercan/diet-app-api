@@ -1,12 +1,12 @@
 const { Router } = require('express');
 const recipeController = require('@controllers/recipeController');
-const validateRecipe = require('@validations/recipeValidation');
+const { validateCreateRecipeRequest, validateCreateRecipeWithAIRequest } = require('@validations/recipeValidation');
 
 const router = Router();
 
-router.post('/', validateRecipe, recipeController.createRecipe);
+router.post('/', validateCreateRecipeRequest, recipeController.createRecipe);
 
-//router.post('/ai', recipeController.createRecipeWithAI);
+router.post('/ai', validateCreateRecipeWithAIRequest, recipeController.createRecipeWithAI);
 
 router.get('/:id', recipeController.getRecipeById);
 

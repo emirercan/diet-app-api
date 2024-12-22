@@ -18,7 +18,17 @@ async function getRecipeById (req, res, next) {
   }
 }
 
+async function createRecipeWithAI (req, res, next) {
+  try {
+    const recipe = await recipeService.createRecipeWithAI(req.body);
+    res.status(201).json(recipe);
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   createRecipe,
-  getRecipeById
+  getRecipeById,
+  createRecipeWithAI
 };

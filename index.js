@@ -12,9 +12,7 @@ const errorHandler = require('@middlewares/errorHandler');
 
 setupMiddlewares(app);
 
-
 app.use('/api', routes);
-
 
 app.use(errorHandler);
 

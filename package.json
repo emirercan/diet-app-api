@@ -48,6 +48,7 @@
     "@repository": "./src/repository",
     "@validations": "./src/validations",
     "@exceptions": "./src/exceptions",
-    "@dto": "./src/dto"
+    "@dto": "./src/dto",
+    "@ai": "./src/ai"
   }
 }
