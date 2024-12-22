@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".", 
+      "paths": {
+        "@logger/*": ["src/config/logger/*"],
+        "@routes/*": ["src/routes/*"],
+        "@middlewares/*": ["src/middlewares/*"],
+        "@services/*": ["src/services/*"],
+        "@utils/*": ["src/utils/*"],
+        "@controllers/*": ["src/controllers/*"],
+        "@models/*": ["src/models/*"],
+        "@config/*": ["src/config/*"],
+        "@repository/*": ["src/repository/*"],
+        "@validations/*": ["src/validations/*"],
+        "@exceptions/*": ["src/exceptions/*"],
+        "@dto/*": ["src/dto/*"]
+      }
+    },
+    "include": ["src/**/*"]
+  }
+  

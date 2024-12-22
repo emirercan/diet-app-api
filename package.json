@@ -25,7 +25,10 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0",
     "module-alias": "^2.2.3",
-    "winston": "^3.17.0"
+    "mongoose": "^8.9.2",
+    "openai": "^4.77.0",
+    "winston": "^3.17.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
@@ -34,7 +37,17 @@
     "nodemon": "^3.1.9"
   },
   "_moduleAliases": {
-    "@logger": "./logger/logger.js",
-    "@middlewares": "./middlewares"
+    "@logger": "./src/config/logger",
+    "@routes": "./src/routes",
+    "@middlewares": "./src/middlewares",
+    "@services": "./src/services",
+    "@utils": "./src/utils",
+    "@controllers": "./src/controllers",
+    "@models": "./src/models",
+    "@config": "./src/config",
+    "@repository": "./src/repository",
+    "@validations": "./src/validations",
+    "@exceptions": "./src/exceptions",
+    "@dto": "./src/dto"
   }
 }
