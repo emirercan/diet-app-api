@@ -5,7 +5,6 @@ const openai = require('@ai/openai');
 const generetaRecipePrompt = require('@ai/prompt/generateRecipePrompt');
 const logger = require('@logger');
 
-
 async function createRecipe (data) {
   return await RecipeRepository.create(data);
 }
@@ -43,8 +42,11 @@ async function createRecipeWithAI (data) {
   try {
     parsedData = JSON.parse(assistantMessage);
   } catch {
-    throw new AppError('AI response is not a valid JSON format',500);
+    throw new AppError('AI response is not a valid JSON format', 500);
   }
+
+  parsedData.imagePrompt = parsedData.dallePrompt || '';
+  delete parsedData.dallePrompt;
 
   try {
     return await RecipeRepository.create(parsedData);
@@ -53,9 +55,42 @@ async function createRecipeWithAI (data) {
   }
 }
 
+async function createRecipeImageWithAI (data) {
+  const { recipeId } = data;
+  const prompt = await getImagePromptById(recipeId);
+
+  const response = await openai.images.generate({
+    model: 'dall-e-3',
+    prompt: prompt,
+    n: 1,
+    size: '1024x1024',
+  });
+
+  if (!response.data[0].url) {
+    throw new AppError('AI response does not contain an image URL', 500);
+  }
+
+  return response.data[0].url;
+}
+
+//Service helper function
+async function getImagePromptById (id) {
+  const recipe = await RecipeRepository.findById(id, 'imagePrompt');
+
+  if (!recipe) {
+    throw new AppError(`Recipe with id ${id} not found`, 404);
+  }
+
+  if (!recipe.imagePrompt) {
+    throw new AppError(`Image prompt for recipe with id ${id} not found`, 404);
+  }
+
+  return recipe.imagePrompt;
+}
 
 module.exports = {
   createRecipe,
+  getRecipeById,
   createRecipeWithAI,
-  getRecipeById
+  createRecipeImageWithAI
 };

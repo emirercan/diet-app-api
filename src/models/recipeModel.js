@@ -26,6 +26,14 @@ const recipeSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  imagePrompt: {
+    type: String,
+    default: '',
+  },
+  imageUrl: {
+    type: String,
+    default: '',
+  },
   createdAt: {
     type: Date,
     default: Date.now,

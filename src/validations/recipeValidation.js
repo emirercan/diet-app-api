@@ -43,6 +43,14 @@ const createRecipeWithAIValidationSchema = yup.object().shape({
     .optional(),
 });
 
+const createRecipeImageWithAIValidationSchema = yup.object().shape({
+  recipeId: yup
+    .string()
+    .required('Recipe ID is required')
+    .matches(/^[a-fA-F0-9]{24}$/, 'Recipe ID must be a valid MongoDB ObjectId'),
+});
+
+
 const validateCreateRecipeRequest = async (req, res, next) => {
   try {
     await createRecipeValidationSchema.validate(req.body);
@@ -70,7 +78,21 @@ const validateCreateRecipeWithAIRequest = async (req, res, next) => {
   }
 };
 
+const validateCreateRecipeImageWithAIRequest = async (req, res, next) => {
+  try {
+    await createRecipeImageWithAIValidationSchema.validate(req.body);
+    next();
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      const message = error.errors.join(', ');
+      next(new AppError(message, 400));
+    }
+    next(error);
+  }
+};
+
 module.exports = {
   validateCreateRecipeRequest,
   validateCreateRecipeWithAIRequest,
+  validateCreateRecipeImageWithAIRequest
 };

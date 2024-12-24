@@ -27,8 +27,18 @@ async function createRecipeWithAI (req, res, next) {
   }
 }
 
+async function createRecipeImageWithAI (req, res, next) {
+  try {
+    const recipeImageUrl = await recipeService.createRecipeImageWithAI(req.body);
+    res.status(201).json(recipeImageUrl);
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   createRecipe,
   getRecipeById,
-  createRecipeWithAI
+  createRecipeWithAI,
+  createRecipeImageWithAI,
 };
