@@ -3,7 +3,9 @@ const AppError = require('@exceptions/AppError');
 const RecipeDto = require('@dto/RecipeDto');
 const openai = require('@ai/openai');
 const generetaRecipePrompt = require('@ai/prompt/generateRecipePrompt');
+const generateDetectIngredientPrompt = require('@ai/prompt/generateDetectIngredientPrompt');
 const logger = require('@logger');
+const encodeImageToBase64 = require('@utils/encodeImageToBase64');
 
 async function createRecipe (data) {
   return await RecipeRepository.create(data);
@@ -73,6 +75,40 @@ async function createRecipeImageWithAI (data) {
   return response.data[0].url;
 }
 
+async function detectIngredientsFromImage (filePath) {
+  const base64Image = encodeImageToBase64(filePath);
+  const prompt = generateDetectIngredientPrompt();
+
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: prompt},
+          {
+            type: 'image_url',
+            image_url: { url: `data:image/jpeg;base64,${base64Image}` },
+          },
+        ],
+      },
+    ],
+  });
+
+  const content = response.choices[0].message.content;
+
+  let detectedIngredients;
+  try {
+    detectedIngredients = JSON.parse(content);
+  } catch (error) {
+    logger.error('Error parsing detected ingredients:', JSON.stringify(content, null, 2));
+    throw new AppError('Invalid response format', 500);
+  }
+
+  return detectedIngredients;
+} 
+
+
 //Service helper function
 async function getImagePromptById (id) {
   const recipe = await RecipeRepository.findById(id, 'imagePrompt');
@@ -92,5 +128,6 @@ module.exports = {
   createRecipe,
   getRecipeById,
   createRecipeWithAI,
-  createRecipeImageWithAI
+  createRecipeImageWithAI,
+  detectIngredientsFromImage
 };
